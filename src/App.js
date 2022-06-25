@@ -29,12 +29,24 @@ const App = () => {
         password
       })
       setUser(user)
+      window.localStorage.setItem('userLoggedInBlogsApp', JSON.stringify(user))
       setUsername('')
       setPassword('')
     } catch (error) {
       console.log(error)
     }
   }
+  const handleLogout = () =>{
+    window.localStorage.clear()
+    setUser(null)
+  }
+
+  useEffect(() =>{
+    const userJson = window.localStorage.getItem('userLoggedInBlogsApp')
+    const user = JSON.parse(userJson)
+    setUser(user)
+  }, [])
+
   const loginForm = ()=>{
     return(
       <div>
@@ -57,7 +69,11 @@ const App = () => {
       {
         user === null ? loginForm():
         <div>
-          <p>{user.name} logged in to the app !</p>
+          <div>
+            <p>{user.name} logged in to the app !</p>
+            <button onClick={handleLogout}>logout</button>
+          </div>
+          
           <h2>blogs</h2>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
