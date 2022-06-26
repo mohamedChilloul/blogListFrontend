@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState(null)
+  const [err, setErr] = useState(true)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -46,8 +49,17 @@ const App = () => {
       window.localStorage.setItem('userLoggedInBlogsApp', JSON.stringify(user))
       setUsername('')
       setPassword('')
+      setMessage(`${user.name} connected succesfully !`)
+      setErr(false)
+      setTimeout(()=>{
+        setMessage(null)
+      }, 4000)
     } catch (error) {
-      console.log(error)
+      setMessage(error.response.data.error)
+      setErr(true)
+      setTimeout(()=>{
+        setMessage(null)
+      }, 4000)
     }
   }
   const handleLogout = () =>{
@@ -62,8 +74,22 @@ const App = () => {
       author,
       url
     }
-    const createdBlog = await blogService.createNewBlog(newBlog)
-    setBlogs(blogs.concat(createdBlog))
+    try {
+      const createdBlog = await blogService.createNewBlog(newBlog)
+      setBlogs(blogs.concat(createdBlog))
+      setMessage(`${createdBlog.title} created succesfully !`)
+      setErr(false)
+      setTimeout(()=>{
+        setMessage(null)
+      }, 4000)
+    } catch (error) {
+      setMessage(error.response.data.error)
+      setErr(true)
+      setTimeout(()=>{
+        setMessage(null)
+      }, 4000)
+    }
+    
   }
   useEffect(() =>{
     const userJson = window.localStorage.getItem('userLoggedInBlogsApp')
@@ -112,15 +138,20 @@ const App = () => {
   return (
     <div>
       {
+        message !== null?<Notification message={message} err={err}></Notification>:null
+      }
+      
+      {
         user === null ? loginForm():
         <div>
+          <h2>blogs App</h2>
           <div>
             <p>{user.name} logged in to the app !</p>
             <button onClick={handleLogout}>logout</button>
             {createNewForm()}
           </div>
           
-          <h2>blogs</h2>
+          
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
