@@ -8,6 +8,10 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -20,6 +24,15 @@ const App = () => {
   const handlePassword = (e) =>{
     setPassword(e.target.value)
   }
+  const handleTitle = (e) =>{
+    setTitle(e.target.value)
+  }
+  const handleAuthor = (e) =>{
+    setAuthor(e.target.value)
+  }
+  const handleUrl = (e) =>{
+    setUrl(e.target.value)
+  }
   const handleLogin = async (e) =>{
     e.preventDefault()
     //console.log(username, password)
@@ -29,6 +42,7 @@ const App = () => {
         password
       })
       setUser(user)
+      blogService.setToken(user.token)
       window.localStorage.setItem('userLoggedInBlogsApp', JSON.stringify(user))
       setUsername('')
       setPassword('')
@@ -41,10 +55,23 @@ const App = () => {
     setUser(null)
   }
 
+  const handleCreate = async (e) =>{
+    e.preventDefault()
+    const newBlog = {
+      title,
+      author,
+      url
+    }
+    const createdBlog = await blogService.createNewBlog(newBlog)
+    setBlogs(blogs.concat(createdBlog))
+  }
   useEffect(() =>{
     const userJson = window.localStorage.getItem('userLoggedInBlogsApp')
-    const user = JSON.parse(userJson)
-    setUser(user)
+    if(userJson){
+      const user = JSON.parse(userJson)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
   }, [])
 
   const loginForm = ()=>{
@@ -63,7 +90,25 @@ const App = () => {
       </div>
     )
   }
-
+  const createNewForm = () => {
+    return (
+      <div>
+        <h2>create new</h2>
+        <form onSubmit={handleCreate}>
+          <label>title  </label>
+          <input value={title} onChange={handleTitle}></input>
+          <br></br>
+          <label>author </label>
+          <input value={author} onChange={handleAuthor}></input>
+          <br></br>
+          <label>url    </label>
+          <input value={url} onChange={handleUrl}></input>
+          <br></br>
+          <button>create</button>
+        </form>
+      </div>
+    )
+  }
   return (
     <div>
       {
@@ -72,6 +117,7 @@ const App = () => {
           <div>
             <p>{user.name} logged in to the app !</p>
             <button onClick={handleLogout}>logout</button>
+            {createNewForm()}
           </div>
           
           <h2>blogs</h2>
