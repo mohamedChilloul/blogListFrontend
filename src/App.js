@@ -97,6 +97,17 @@ const App = () => {
       console.log(error)
     }
   }
+
+  const deleteBlog = async (blog) =>{
+    try {
+      if(window.confirm(`do you want to delete ${blog.title} ?`)){
+        await blogService.deleteBlog(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id ))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  } 
   return (
     <div>
       <h1>Blogs App</h1>
@@ -114,7 +125,11 @@ const App = () => {
           </div>
           
           {(blogs.sort((b,c)=> c.likes - b.likes)).map(blog =>
-            <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
+            <Blog key={blog.id} 
+                  blog={blog}
+                  updateLikes={updateLikes}
+                  user={user}
+                  deleteBlog={deleteBlog}  />
           )}
         </div>
       }

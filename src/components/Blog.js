@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({blog, updateLikes}) => {
+const Blog = ({blog, updateLikes, user, deleteBlog}) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
   const toggleDeatailsVisibility = () =>{
@@ -13,6 +13,10 @@ const Blog = ({blog, updateLikes}) => {
     }
     updateLikes(blog.id, updatedBlog)
   }
+  const deleteHandler = () =>{
+    console.log('deleting ', blog, ' created by ', user)
+    deleteBlog(blog)
+  }
   const blogStyle = {
     paddingTop: 5,
     paddingLeft: 2,
@@ -22,6 +26,7 @@ const Blog = ({blog, updateLikes}) => {
   }
   const displayAtt = {display : detailsVisible ? '' : 'none'}
   const buttonLabel = detailsVisible ?'hide' : 'view'
+  const showIfIdentiqueUser = {display : user.username === blog.user.username ? '': 'none'}
   return (
     <div style={blogStyle}>
       <h4>
@@ -31,7 +36,11 @@ const Blog = ({blog, updateLikes}) => {
         <label>{blog.url}</label>
         <p>likes : {blog.likes} <button onClick={likeHandler}>like</button></p>
         <p>{blog.author}</p>
+        <div style={showIfIdentiqueUser}>
+          <button onClick={deleteHandler}>delete</button>
+        </div>
       </div>
+      
     </div>
   )
 }
