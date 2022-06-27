@@ -1,14 +1,27 @@
+import { useState } from "react"
 
-
-const NewBlog = ({
-    handleCreate,
-    handleAuthor,
-    handleTitle,
-    handleUrl,
-    url,
-    title,
-    author
-}) =>{
+const NewBlog = ({createBlog}) =>{
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+   
+  const handleTitle = (e) =>{
+    setTitle(e.target.value)
+  }
+  const handleAuthor = (e) =>{
+    setAuthor(e.target.value)
+  }
+  const handleUrl = (e) =>{
+    setUrl(e.target.value)
+  }
+  const handleCreate = (e) =>{
+    e.preventDefault()
+    createBlog({
+        title,
+        author,
+        url
+    })
+  }
     return(
         <div>
         <h2>create new</h2>

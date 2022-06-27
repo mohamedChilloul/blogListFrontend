@@ -10,11 +10,6 @@ import Login from './components/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [message, setMessage] = useState(null)
   const [err, setErr] = useState(true)
 
@@ -24,34 +19,13 @@ const App = () => {
     )  
   }, [])
 
-  const handleUsername = (e) =>{
-    setUsername(e.target.value)
-  }
-  const handlePassword = (e) =>{
-    setPassword(e.target.value)
-  }
-  const handleTitle = (e) =>{
-    setTitle(e.target.value)
-  }
-  const handleAuthor = (e) =>{
-    setAuthor(e.target.value)
-  }
-  const handleUrl = (e) =>{
-    setUrl(e.target.value)
-  }
-  const handleLogin = async (e) =>{
-    e.preventDefault()
-    //console.log(username, password)
+
+  const handleLogin = async (credObject) =>{
     try {
-      const user = await loginService.login({
-        username,
-        password
-      })
+      const user = await loginService.login(credObject)
       setUser(user)
       blogService.setToken(user.token)
       window.localStorage.setItem('userLoggedInBlogsApp', JSON.stringify(user))
-      setUsername('')
-      setPassword('')
       setMessage(`${user.name} connected succesfully !`)
       setErr(false)
       setTimeout(()=>{
@@ -70,13 +44,7 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreate = async (e) =>{
-    e.preventDefault()
-    const newBlog = {
-      title,
-      author,
-      url
-    }
+  const handleCreate = async (newBlog) =>{  
     try {
       const createdBlog = await blogService.createNewBlog(newBlog)
       addBlogRef.current.toggleVisibility()
@@ -107,26 +75,16 @@ const App = () => {
   const loginForm = ()=>{
     return(
       <Togglable buttonLabel='login to App'>
-        <Login
-        handleLogin={handleLogin}
-        handlePassword={handlePassword}
-        handleUsername={handleUsername}
-        username={username}
-        password={password}
-      />
+        <Login connect={handleLogin}/>
       </Togglable>
-      
+    
     )
   }
   const addBlogRef = useRef()
   const createNewForm = () => {
     return (
       <Togglable buttonLabel= 'add new Blog' ref={addBlogRef}>
-        <NewBlog handleCreate={handleCreate} author={author}
-               handleAuthor={handleAuthor}
-               title={title} handleTitle={handleTitle}
-               url={url} handleUrl={handleUrl}
-        />
+        <NewBlog createBlog={handleCreate}/>
       </Togglable>
       
     )
