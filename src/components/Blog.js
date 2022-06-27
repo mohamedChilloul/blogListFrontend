@@ -1,12 +1,18 @@
 import { useState } from "react"
 
-const Blog = ({blog}) => {
+const Blog = ({blog, updateLikes}) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
 
   const toggleDeatailsVisibility = () =>{
     setDetailsVisible(!detailsVisible)
   }
 
+  const likeHandler = () =>{
+    const updatedBlog = {
+      ...blog, likes : blog.likes + 1, user : blog.user.id
+    }
+    updateLikes(blog.id, updatedBlog)
+  }
   const blogStyle = {
     paddingTop: 5,
     paddingLeft: 2,
@@ -23,7 +29,7 @@ const Blog = ({blog}) => {
       </h4>
       <div style={displayAtt}>
         <label>{blog.url}</label>
-        <p>likes : {blog.likes} <button>like</button></p>
+        <p>likes : {blog.likes} <button onClick={likeHandler}>like</button></p>
         <p>{blog.author}</p>
       </div>
     </div>
