@@ -1,11 +1,23 @@
+import { useState } from "react"
+const Login = ({ connect }) =>{
 
-const Login = ({
-    handleLogin,
-    handlePassword,
-    handleUsername,
-    username,
-    password
-}) =>{
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const handleUsername = (e) =>{
+        setUsername(e.target.value)
+      }
+      const handlePassword = (e) =>{
+        setPassword(e.target.value)
+      }
+      const handleLogin = (e) =>{
+        e.preventDefault()
+        connect({
+            username,
+            password
+        })
+        setUsername('')
+        setPassword('')
+      }
     return(
         <div>
         <h1>log in to application</h1>
