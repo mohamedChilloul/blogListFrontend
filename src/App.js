@@ -76,10 +76,7 @@ const App = () => {
 
     const loginForm = () => {
         return(
-            <Togglable buttonLabel='login to App'>
-                <Login connect={handleLogin}/>
-            </Togglable>
-
+            <Login connect={handleLogin}/>
         )
     }
     const addBlogRef = useRef()
