@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react'
 
-const Notification = ({message, err}) =>{
+const Notification = ({ message, err }) => {
     const clr = err ? 'red' : 'green'
     const style = {
         color: clr,
@@ -10,7 +10,7 @@ const Notification = ({message, err}) =>{
         borderRadius: '5px',
         padding: '10px',
         marginBottom: '10px'
-      }
+    }
     return(
         <div style={style}>
             {message}
