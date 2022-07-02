@@ -42,7 +42,8 @@ const Blog = (props) => {
             </h4>
             <div style={displayAtt} className='blogDetails'>
                 <label>{blog.url}</label>
-                <p>likes : {blog.likes} <button onClick={likeHandler}>like</button></p>
+                <p>
+                    <span>likes : {blog.likes}</span> <button onClick={likeHandler} id='likeButton'>like</button></p>
                 <p>{blog.author}</p>
                 <div style={showIfIdentiqueUser}>
                     <button onClick={deleteHandler} style={{ color : 'red' }}>delete</button>
