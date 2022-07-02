@@ -23,12 +23,12 @@ const Login = ({ connect }) => {
             <h1>log in to application</h1>
             <form onSubmit={handleLogin}>
                 <label>username</label>
-                <input value={username} onChange={handleUsername}></input>
+                <input value={username} onChange={handleUsername} id='usernameInp'></input>
                 <br></br>
                 <label>password</label>
-                <input value={password} onChange={handlePassword}></input>
+                <input value={password} onChange={handlePassword} id='passwordInp'></input>
                 <br></br>
-                <button type='submit'>login</button>
+                <button type='submit' id='loginButton'>login</button>
             </form>
         </div>
     )
