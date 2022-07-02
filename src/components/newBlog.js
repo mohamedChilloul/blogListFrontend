@@ -27,15 +27,15 @@ const NewBlog = ({ createBlog }) => {
             <h2>create new</h2>
             <form onSubmit={handleCreate}>
                 <label>title  </label>
-                <input value={title} onChange={handleTitle}></input>
+                <input id='titleInp' value={title} onChange={handleTitle}></input>
                 <br></br>
                 <label>author </label>
-                <input value={author} onChange={handleAuthor}></input>
+                <input id='authorInp' value={author} onChange={handleAuthor}></input>
                 <br></br>
                 <label>url    </label>
-                <input value={url} onChange={handleUrl}></input>
+                <input id='urlInp' value={url} onChange={handleUrl}></input>
                 <br></br>
-                <button>create</button>
+                <button id='createButton'>create</button>
             </form>
         </div>
     )

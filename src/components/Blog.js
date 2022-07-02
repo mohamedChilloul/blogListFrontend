@@ -36,7 +36,7 @@ const Blog = (props) => {
     const buttonLabel = detailsVisible ?'hide' : 'view'
     const showIfIdentiqueUser = { display : deleteVisible ? '': 'none' }
     return (
-        <div style={blogStyle}>
+        <div style={blogStyle} className='Blog'>
             <h4>
                 {blog.title}  <button onClick={toggleDeatailsVisibility}>{buttonLabel}</button>
             </h4>
