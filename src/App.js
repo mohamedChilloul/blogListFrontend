@@ -47,8 +47,10 @@ const App = () => {
     const handleCreate = async (newBlog) => {
         try {
             const createdBlog = await blogService.createNewBlog(newBlog)
-            addBlogRef.current.toggleVisibility()
+            console.log('createdBlog : ',createdBlog)
             setBlogs(blogs.concat(createdBlog))
+            addBlogRef.current.toggleVisibility()
+            //BlogRef.current.toggleDeleteVisibility()
             setMessage(`${createdBlog.title} created succesfully !`)
             setErr(false)
             setTimeout(() => {
@@ -81,6 +83,9 @@ const App = () => {
         )
     }
     const addBlogRef = useRef()
+
+    //const BlogRef = useRef()
+
     const createNewForm = () => {
         return (
             <Togglable buttonLabel= 'add new Blog' ref={addBlogRef}>
@@ -129,7 +134,8 @@ const App = () => {
                                 blog={blog}
                                 updateLikes={updateLikes}
                                 user={user.username}
-                                deleteBlog={deleteBlog}  />
+                                deleteBlog={deleteBlog}
+                                deleteVisible={blog.user.username === user.username} />
                         )}
                     </div>
             }

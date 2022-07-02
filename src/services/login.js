@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios'
 
 const basedUrl = '/api/login'
 
-const login = async (credentials)=>{
+const login = async (credentials) => {
     const request = await axios.post(basedUrl, credentials)
     return request.data
 }
