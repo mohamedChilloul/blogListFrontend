@@ -43,9 +43,7 @@ describe('Blog app', function() {
     describe('when user logged In', () => {
 
         beforeEach(() => {
-            cy.get('#usernameInp').type('admin')
-            cy.get('#passwordInp').type('root')
-            cy.get('#loginButton').click()
+            cy.login({ username : 'admin', password : 'root' })
         })
 
         it('a blog can be created ' , () => {
@@ -57,19 +55,48 @@ describe('Blog app', function() {
             cy.get('.Blog').should('contain','titre de Blog')
         })
 
-        describe('and a blog is created ', () => {
+        describe('and many blogs are created ', () => {
 
             beforeEach(() => {
-                cy.contains('add new Blog').click()
-                cy.get('#titleInp').type('titre de Blog')
-                cy.get('#authorInp').type('auteur de Blog')
-                cy.get('#urlInp').type('url de Blog')
-                cy.get('#createButton').click()
+                cy.createBlog({
+                    title : 'titre Blog 1',
+                    author : 'auteur Blog 1',
+                    url : 'http://example.io'
+                })
+                cy.createBlog({
+                    title : 'titre Blog 2',
+                    author : 'auteur Blog 2',
+                    url : 'http://example.io'
+                })
+                cy.createBlog({
+                    title : 'titre Blog 3',
+                    author : 'auteur Blog 3',
+                    url : 'http://example.io'
+                })
+                cy.contains('titre Blog 1').contains('view').click()
             })
 
             it('users can like a blog ', () => {
-                cy.get('.Blog').contains('view').click()
                 cy.get('#likeButton').click().parent().find('span').should('contain', 'likes : 1')
+            })
+
+            it('user can delete a blog',  () => {
+                cy.contains('delete').click()
+                cy.should('not.contain', 'titre Blog 1')
+            })
+
+            it('other user can not delete a blog', () => {
+                cy.createUser({
+                    username : 'otherUser',
+                    name : 'nameOfOtherUser',
+                    password : 'pass'
+                })
+                window.localStorage.clear()
+                cy.login({ username : 'otherUser', password : 'pass' })
+                cy.contains('nameOfOtherUser logged in to the app')
+                cy.contains('view').click()
+                cy.should('not.contain', 'delete')
+
             })
         })
     })
