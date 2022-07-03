@@ -22,7 +22,7 @@ describe('Blog app', function() {
         beforeEach(() => {
             console.log('beforeach Login here !')
         })
-
+ 
         it('succes with correct credentials ', () => {
             cy.get('#usernameInp').type('admin')
             cy.get('#passwordInp').type('root')
@@ -39,7 +39,7 @@ describe('Blog app', function() {
                 .and('have.css','color', 'rgb(255, 0, 0)')
         })
     })
-
+ 
     describe('when user logged In', () => {
 
         beforeEach(() => {
@@ -73,6 +73,7 @@ describe('Blog app', function() {
                     author : 'auteur Blog 3',
                     url : 'http://example.io'
                 })
+                cy.visit('http://localhost:3000')
                 cy.contains('titre Blog 1').contains('view').click()
             })
 
@@ -97,6 +98,21 @@ describe('Blog app', function() {
                 cy.contains('view').click()
                 cy.should('not.contain', 'delete')
 
+            })
+
+            it('blogs are ordred by number of likes ',async () => {
+                cy.contains('titre Blog 3').parent().as('blog3').contains('view').click()
+                cy.contains('titre Blog 2').parent().as('blog2').contains('view').click()
+                cy.get('@blog3').find('#likeButton').click()
+                cy.wait(1000)
+                cy.get('@blog3').find('#likeButton').click()
+                cy.wait(1000)
+                cy.get('@blog2').find('#likeButton').click()
+                cy.wait(1000)
+                cy.visit('http://localhost:3000')
+                cy.get('.Blog').eq(0).contains('titre Blog 3')
+                cy.get('.Blog').eq(1).contains('titre Blog 2')
+                cy.get('.Blog').eq(2).contains('titre Blog 1')
             })
         })
     })
