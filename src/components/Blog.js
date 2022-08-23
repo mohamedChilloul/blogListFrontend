@@ -1,14 +1,14 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react'
 
 const Blog = (props) => {
     const { blog, updateLikes, user, deleteBlog, deleteVisible } = props
     const [detailsVisible, setDetailsVisible] = useState(false)
-    console.log('deletVisible : ',deleteVisible)
+    console.log('deletVisible : ', deleteVisible)
 
     const toggleDeatailsVisibility = () => {
         setDetailsVisible(!detailsVisible)
     }
-
 
     /* useImperativeHandle(refs, () => {
         return{
@@ -17,7 +17,9 @@ const Blog = (props) => {
     }) */
     const likeHandler = () => {
         const updatedBlog = {
-            ...blog, likes : blog.likes + 1, user : blog.user.id
+            ...blog,
+            likes: blog.likes + 1,
+            user: blog.user.id,
         }
         updateLikes(blog.id, updatedBlog)
     }
@@ -30,30 +32,38 @@ const Blog = (props) => {
         paddingLeft: 2,
         border: 'solid',
         borderWidth: 1,
-        marginBottom: 5
+        marginBottom: 5,
     }
-    const displayAtt = { display : detailsVisible ? '' : 'none' }
-    const buttonLabel = detailsVisible ?'hide' : 'view'
-    const showIfIdentiqueUser = { display : deleteVisible ? '': 'none' }
+    const displayAtt = { display: detailsVisible ? '' : 'none' }
+    const buttonLabel = detailsVisible ? 'hide' : 'view'
+    const showIfIdentiqueUser = { display: deleteVisible ? '' : 'none' }
     return (
-        <div style={blogStyle} className='Blog'>
+        <div style={blogStyle} className="Blog">
             <h4>
-                {blog.title}  <button onClick={toggleDeatailsVisibility}>{buttonLabel}</button>
+                {blog.title}{' '}
+                <button onClick={toggleDeatailsVisibility}>
+                    {buttonLabel}
+                </button>
             </h4>
-            <div style={displayAtt} className='blogDetails'>
+            <div style={displayAtt} className="blogDetails">
                 <label>{blog.url}</label>
                 <p>
-                    <span>likes : {blog.likes}</span> <button onClick={likeHandler} id='likeButton'>like</button></p>
+                    <span>likes : {blog.likes}</span>{' '}
+                    <button onClick={likeHandler} id="likeButton">
+                        like
+                    </button>
+                </p>
                 <p>{blog.author}</p>
                 <div style={showIfIdentiqueUser}>
-                    <button onClick={deleteHandler} style={{ color : 'red' }}>delete</button>
+                    <button onClick={deleteHandler} style={{ color: 'red' }}>
+                        delete
+                    </button>
                 </div>
             </div>
-
         </div>
     )
 }
 
-Blog.displayName='Blog'
+Blog.displayName = 'Blog'
 
 export default Blog
