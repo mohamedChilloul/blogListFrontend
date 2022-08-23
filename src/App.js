@@ -14,18 +14,18 @@ const App = () => {
     const [err, setErr] = useState(true)
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs( blogs )
-        )
+        blogService.getAll().then((blogs) => setBlogs(blogs))
     }, [])
-
 
     const handleLogin = async (credObject) => {
         try {
             const user = await loginService.login(credObject)
             setUser(user)
             blogService.setToken(user.token)
-            window.localStorage.setItem('userLoggedInBlogsApp', JSON.stringify(user))
+            window.localStorage.setItem(
+                'userLoggedInBlogsApp',
+                JSON.stringify(user)
+            )
             setMessage(`${user.name} connected succesfully !`)
             setErr(false)
             setTimeout(() => {
@@ -47,7 +47,7 @@ const App = () => {
     const handleCreate = async (newBlog) => {
         try {
             const createdBlog = await blogService.createNewBlog(newBlog)
-            console.log('createdBlog : ',createdBlog)
+            console.log('createdBlog : ', createdBlog)
             setBlogs(blogs.concat(createdBlog))
             addBlogRef.current.toggleVisibility()
             //BlogRef.current.toggleDeleteVisibility()
@@ -63,11 +63,10 @@ const App = () => {
                 setMessage(null)
             }, 4000)
         }
-
     }
     useEffect(() => {
         const userJson = window.localStorage.getItem('userLoggedInBlogsApp')
-        if(userJson){
+        if (userJson) {
             const user = JSON.parse(userJson)
             setUser(user)
             blogService.setToken(user.token)
@@ -75,9 +74,7 @@ const App = () => {
     }, [])
 
     const loginForm = () => {
-        return(
-            <Login connect={handleLogin}/>
-        )
+        return <Login connect={handleLogin} />
     }
     const addBlogRef = useRef()
 
@@ -85,16 +82,15 @@ const App = () => {
 
     const createNewForm = () => {
         return (
-            <Togglable buttonLabel= 'add new Blog' ref={addBlogRef}>
-                <NewBlog createBlog={handleCreate}/>
+            <Togglable buttonLabel="add new Blog" ref={addBlogRef}>
+                <NewBlog createBlog={handleCreate} />
             </Togglable>
-
         )
     }
     const updateLikes = async (id, newBlog) => {
         try {
             const updatedBlog = await blogService.updateLikes(id, newBlog)
-            setBlogs(blogs.map(b => b.id !== id ? b : updatedBlog))
+            setBlogs(blogs.map((b) => (b.id !== id ? b : updatedBlog)))
         } catch (error) {
             console.log(error)
         }
@@ -102,9 +98,9 @@ const App = () => {
 
     const deleteBlog = async (blog) => {
         try {
-            if(window.confirm(`do you want to delete ${blog.title} ?`)){
+            if (window.confirm(`do you want to delete ${blog.title} ?`)) {
                 await blogService.deleteBlog(blog.id)
-                setBlogs(blogs.filter(b => b.id !== blog.id ))
+                setBlogs(blogs.filter((b) => b.id !== blog.id))
             }
         } catch (error) {
             console.log(error)
@@ -113,30 +109,39 @@ const App = () => {
     return (
         <div>
             <h1>Blogs App</h1>
-            {
-                message !== null?<Notification message={message} err={err}></Notification>:null
-            }
+            {message !== null ? (
+                <Notification message={message} err={err}></Notification>
+            ) : null}
 
-            {
-                user === null ? loginForm():
+            {user === null ? (
+                loginForm()
+            ) : (
+                <div>
+                    <h2>blogs App</h2>
                     <div>
-                        <h2>blogs App</h2>
-                        <div>
-                            <p>{user.name} logged in to the app ! <button onClick={handleLogout}>logout</button></p>
-                            {createNewForm()}
-                        </div>
+                        <p>
+                            {user.name} logged in to the app !{' '}
+                            <button onClick={handleLogout}>logout</button>
+                        </p>
+                        {createNewForm()}
+                    </div>
 
-                        {(blogs.sort((b,c) => c.likes - b.likes)).map(blog =>
-                            <Blog key={blog.id}
+                    {blogs
+                        .sort((b, c) => c.likes - b.likes)
+                        .map((blog) => (
+                            <Blog
+                                key={blog.id}
                                 blog={blog}
                                 updateLikes={updateLikes}
                                 user={user.username}
                                 deleteBlog={deleteBlog}
-                                deleteVisible={blog.user.username === user.username} />
-                        )}
-                    </div>
-            }
-
+                                deleteVisible={
+                                    blog.user.username === user.username
+                                }
+                            />
+                        ))}
+                </div>
+            )}
         </div>
     )
 }
