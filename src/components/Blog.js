@@ -4,7 +4,6 @@ import { useState } from 'react'
 const Blog = (props) => {
     const { blog, updateLikes, user, deleteBlog, deleteVisible } = props
     const [detailsVisible, setDetailsVisible] = useState(false)
-    console.log('deletVisible : ', deleteVisible)
 
     const toggleDeatailsVisibility = () => {
         setDetailsVisible(!detailsVisible)
