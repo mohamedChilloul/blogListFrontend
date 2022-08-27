@@ -1,74 +1,51 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import NewBlog from './components/newBlog'
 import Togglable from './components/togglable'
 import Login from './components/login'
+import {  useDispatch, useSelector } from 'react-redux'
+import { addNewBlog,  initBlogs } from './reducers/blogsReducer'
+import BlogList from './components/blogList'
+import { handleNotification } from './reducers/notificationReducer'
+import { connect, disconnect, setUser } from './reducers/userReducer'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
-    const [user, setUser] = useState(null)
-    const [message, setMessage] = useState(null)
+
     const [err, setErr] = useState(true)
+    const user = useSelector(state => state.user)
+    const notification = useSelector(state => state.notification)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        blogService.getAll().then((blogs) => setBlogs(blogs))
-    }, [])
+        dispatch(initBlogs())
+    }, [dispatch])
 
     const handleLogin = async (credObject) => {
-        try {
-            const user = await loginService.login(credObject)
-            setUser(user)
-            blogService.setToken(user.token)
-            window.localStorage.setItem(
-                'userLoggedInBlogsApp',
-                JSON.stringify(user)
-            )
-            setMessage(`${user.name} connected succesfully !`)
-            setErr(false)
-            setTimeout(() => {
-                setMessage(null)
-            }, 4000)
-        } catch (error) {
-            setMessage(error.response.data.error)
-            setErr(true)
-            setTimeout(() => {
-                setMessage(null)
-            }, 4000)
-        }
+        dispatch(connect(credObject))
     }
     const handleLogout = () => {
-        window.localStorage.clear()
-        setUser(null)
+        dispatch(disconnect())
     }
 
     const handleCreate = async (newBlog) => {
         try {
-            const createdBlog = await blogService.createNewBlog(newBlog)
-            console.log('createdBlog : ', createdBlog)
-            setBlogs(blogs.concat(createdBlog))
+            dispatch(addNewBlog(newBlog))
+            console.log('createdBlog : ', newBlog)
             addBlogRef.current.toggleVisibility()
             //BlogRef.current.toggleDeleteVisibility()
-            setMessage(`${createdBlog.title} created succesfully !`)
             setErr(false)
-            setTimeout(() => {
-                setMessage(null)
-            }, 4000)
+            dispatch(handleNotification(`${newBlog.title} created succesfully !`, 3))
         } catch (error) {
-            setMessage(error.response.data.error)
             setErr(true)
-            setTimeout(() => {
-                setMessage(null)
-            }, 4000)
+            dispatch(handleNotification(error.response.data.error, 4))
         }
     }
     useEffect(() => {
         const userJson = window.localStorage.getItem('userLoggedInBlogsApp')
         if (userJson) {
             const user = JSON.parse(userJson)
-            setUser(user)
+            dispatch(setUser(user))
             blogService.setToken(user.token)
         }
     }, [])
@@ -87,37 +64,17 @@ const App = () => {
             </Togglable>
         )
     }
-    const updateLikes = async (id, newBlog) => {
-        try {
-            const updatedBlog = await blogService.updateLikes(id, newBlog)
-            setBlogs(blogs.map((b) => (b.id !== id ? b : updatedBlog)))
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const deleteBlog = async (blog) => {
-        try {
-            if (window.confirm(`do you want to delete ${blog.title} ?`)) {
-                await blogService.deleteBlog(blog.id)
-                setBlogs(blogs.filter((b) => b.id !== blog.id))
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
     return (
         <div>
             <h1>Blogs App</h1>
-            {message !== null ? (
-                <Notification message={message} err={err}></Notification>
+            {notification !== '' ? (
+                <Notification message={notification} err={err}></Notification>
             ) : null}
 
             {user === null ? (
                 loginForm()
             ) : (
                 <div>
-                    <h2>blogs App</h2>
                     <div>
                         <p>
                             {user.name} logged in to the app !{' '}
@@ -126,20 +83,9 @@ const App = () => {
                         {createNewForm()}
                     </div>
 
-                    {blogs
-                        .sort((b, c) => c.likes - b.likes)
-                        .map((blog) => (
-                            <Blog
-                                key={blog.id}
-                                blog={blog}
-                                updateLikes={updateLikes}
-                                user={user.username}
-                                deleteBlog={deleteBlog}
-                                deleteVisible={
-                                    blog.user.username === user.username
-                                }
-                            />
-                        ))}
+                    <div>
+                        <BlogList user={user}></BlogList >
+                    </div>
                 </div>
             )}
         </div>
