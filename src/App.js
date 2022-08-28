@@ -12,6 +12,7 @@ import { connect, disconnect, setUser } from './reducers/userReducer'
 import Users from './components/Users'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import User from './components/User'
+import Blog from './components/Blog'
 
 const App = () => {
 
@@ -91,12 +92,13 @@ const App = () => {
                             <Route path='/' element={
                                 <div>
                                     {createNewForm()}
-                                    <BlogList user={user}></BlogList >
+                                    <BlogList></BlogList >
                                 </div>
                             }>
                             </Route>
                             <Route path='/users' element={<Users></Users>}></Route>
                             <Route path={'/users/:id'} element={<User></User>}></Route>
+                            <Route path={'/blogs/:id'} element={<Blog></Blog>}></Route>
                         </Routes>
                     </Router>
                 </div>

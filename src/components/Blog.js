@@ -1,19 +1,34 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { likeTheBlog, deleteTheBlog } from '../reducers/blogsReducer'
+import { useParams, useNavigate } from 'react-router-dom'
+const Blog = () => {
 
-const Blog = (props) => {
-    const { blog, updateLikes, user, deleteBlog, deleteVisible } = props
-    const [detailsVisible, setDetailsVisible] = useState(false)
-
-    const toggleDeatailsVisibility = () => {
-        setDetailsVisible(!detailsVisible)
+    const dispatch  = useDispatch()
+    const navigate = useNavigate()
+    const user = useSelector(state => state.user)
+    const id = useParams().id
+    const blog = useSelector(state => state.blogs.find(b => b.id === id))
+    const updateLikes = async (id, newBlog) => {
+        try {
+            dispatch(likeTheBlog(id, newBlog))
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    /* useImperativeHandle(refs, () => {
-        return{
-            toggleDeleteVisibility
+    const deleteBlog = async (blog) => {
+        try {
+            if (window.confirm(`do you want to delete ${blog.title} ?`)) {
+                dispatch(deleteTheBlog(blog.id))
+                navigate('/')
+            }
+        } catch (error) {
+            console.log(error)
         }
-    }) */
+    }
+
+
     const likeHandler = () => {
         const updatedBlog = {
             ...blog,
@@ -31,20 +46,22 @@ const Blog = (props) => {
         paddingLeft: 2,
         border: 'solid',
         borderWidth: 1,
+        margin : 'auto',
         marginBottom: 5,
+        textAlign : 'center',
+        width : '50%'
     }
-    const displayAtt = { display: detailsVisible ? '' : 'none' }
-    const buttonLabel = detailsVisible ? 'hide' : 'view'
+    const deleteVisible = blog.user.username === user.username
     const showIfIdentiqueUser = { display: deleteVisible ? '' : 'none' }
+    if(!blog){
+        return null
+    }
     return (
         <div style={blogStyle} className="Blog">
             <h4>
                 {blog.title}{' '}
-                <button onClick={toggleDeatailsVisibility}>
-                    {buttonLabel}
-                </button>
             </h4>
-            <div style={displayAtt} className="blogDetails">
+            <div className="blogDetails">
                 <label>{blog.url}</label>
                 <p>
                     <span>likes : {blog.likes}</span>{' '}
