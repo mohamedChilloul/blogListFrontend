@@ -9,6 +9,9 @@ import { addNewBlog,  initBlogs } from './reducers/blogsReducer'
 import BlogList from './components/blogList'
 import { handleNotification } from './reducers/notificationReducer'
 import { connect, disconnect, setUser } from './reducers/userReducer'
+import Users from './components/Users'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import User from './components/User'
 
 const App = () => {
 
@@ -80,14 +83,25 @@ const App = () => {
                             {user.name} logged in to the app !{' '}
                             <button onClick={handleLogout}>logout</button>
                         </p>
-                        {createNewForm()}
                     </div>
-
-                    <div>
-                        <BlogList user={user}></BlogList >
-                    </div>
+                    <br></br>
+                    <hr></hr>
+                    <Router>
+                        <Routes>
+                            <Route path='/' element={
+                                <div>
+                                    {createNewForm()}
+                                    <BlogList user={user}></BlogList >
+                                </div>
+                            }>
+                            </Route>
+                            <Route path='/users' element={<Users></Users>}></Route>
+                            <Route path={'/users/:id'} element={<User></User>}></Route>
+                        </Routes>
+                    </Router>
                 </div>
             )}
+
         </div>
     )
 }

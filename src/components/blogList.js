@@ -28,7 +28,6 @@ const BlogList = ({ user }) => {
     return (
         <div>
             <br></br>
-            <hr></hr>
             {
                 sortedBlogs.map(blog => <Blog
                     key={blog.id}
