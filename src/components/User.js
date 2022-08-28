@@ -7,8 +7,19 @@ const User = () => {
     if (!user){
         return null
     }
+    const styleUser ={
+        paddingTop: 5,
+        paddingLeft: 2,
+        border: 'solid',
+        borderWidth: 1,
+        margin : 'auto',
+        marginBottom: 5,
+        textAlign : 'center',
+        width : '50%'
+    }
+
     return (
-        <div>
+        <div style={styleUser}>
             <h2>{user.username}</h2>
             <h3>blogs created : </h3>
             <ul>

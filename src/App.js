@@ -13,6 +13,7 @@ import Users from './components/Users'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import User from './components/User'
 import Blog from './components/Blog'
+import Menu from './components/Menu'
 
 const App = () => {
 
@@ -79,15 +80,9 @@ const App = () => {
                 loginForm()
             ) : (
                 <div>
-                    <div>
-                        <p>
-                            {user.name} logged in to the app !{' '}
-                            <button onClick={handleLogout}>logout</button>
-                        </p>
-                    </div>
-                    <br></br>
                     <hr></hr>
                     <Router>
+                        <Menu user={user} logout={handleLogout}></Menu>
                         <Routes>
                             <Route path='/' element={
                                 <div>
