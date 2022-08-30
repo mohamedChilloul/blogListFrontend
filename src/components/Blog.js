@@ -2,6 +2,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { likeTheBlog, deleteTheBlog } from '../reducers/blogsReducer'
 import { useParams, useNavigate } from 'react-router-dom'
+import AddComment from './AddComment'
 const Blog = () => {
 
     const dispatch  = useDispatch()
@@ -63,18 +64,34 @@ const Blog = () => {
             </h4>
             <div className="blogDetails">
                 <label>{blog.url}</label>
-                <p>
+                <div>
                     <span>likes : {blog.likes}</span>{' '}
                     <button onClick={likeHandler} id="likeButton">
                         like
                     </button>
-                </p>
-                <p>{blog.author}</p>
+                </div>
+                <div>{blog.author}</div>
                 <div style={showIfIdentiqueUser}>
                     <button onClick={deleteHandler} style={{ color: 'red' }}>
                         delete
                     </button>
                 </div>
+            </div>
+            <div>
+                <br></br>
+                <AddComment blog={blog}></AddComment>
+                <h5>comments</h5>
+                <ul>
+                    {
+                        blog.comments.map(c => {
+                            return(
+                                <li key={c.comment}>
+                                    {c.comment}
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
             </div>
         </div>
     )

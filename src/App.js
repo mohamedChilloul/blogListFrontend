@@ -24,7 +24,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(initBlogs())
-    }, [dispatch])
+    }, [])
 
     const handleLogin = async (credObject) => {
         dispatch(connect(credObject))
