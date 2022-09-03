@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
+import { Container, Divider, Typography } from '@mui/material'
 
 const App = () => {
 
@@ -70,8 +71,20 @@ const App = () => {
         )
     }
     return (
-        <div>
-            <h1>Blogs App</h1>
+        <Container>
+            <Typography
+                component='h1'
+                variant='h2'
+                sx={{
+                    textAlign : 'center'
+                }}
+            >
+                Blogs App
+            </Typography>
+            <Divider variant='fullWidth' sx={{
+                mt : 2,
+                mb : 2
+            }}></Divider>
             {notification !== '' ? (
                 <Notification message={notification} err={err}></Notification>
             ) : null}
@@ -80,7 +93,6 @@ const App = () => {
                 loginForm()
             ) : (
                 <div>
-                    <hr></hr>
                     <Router>
                         <Menu user={user} logout={handleLogout}></Menu>
                         <Routes>
@@ -99,7 +111,7 @@ const App = () => {
                 </div>
             )}
 
-        </div>
+        </Container>
     )
 }
 
