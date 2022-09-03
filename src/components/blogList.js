@@ -1,41 +1,52 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Container from '@mui/material/Container'
+import { Divider, List, ListItem, ListItemText } from '@mui/material'
 const BlogList = () => {
     const blogs = useSelector(state => state.blogs)
     const newBlogs = blogs.map(b => b)
     const sortedBlogs = newBlogs.sort((a, b) => b.likes - a.likes )
-    const blogStyle = {
-        paddingTop: 5,
-        paddingLeft: 2,
-        border: 'solid',
-        borderWidth: 1,
-        margin : 'auto',
-        marginBottom: 5,
-        textAlign : 'center',
-        width : '50%'
-    }
+
     return (
-        <div style={{
-            display : 'flex',
-            flexDirection : 'column'
-        }}>
-            <br></br>
-
-            {
-                sortedBlogs.map(b => {
-                    return(
-                        <div key={b.id} style={blogStyle}>
-                            <Link to={`/blogs/${b.id}`}>
-                                {b.title}
+        <Container component='main' maxWidth="sm">
+            <List
+                sx={{
+                    width: '100%',
+                    bgcolor: 'background.paper'
+                }}>
+                {
+                    sortedBlogs.map((b) => {
+                        return(
+                            <Link
+                                key={b.id}
+                                to={`/blogs/${b.id}`}
+                                style={{
+                                    textDecoration : 'none',
+                                    color : '#000'
+                                }}
+                            >
+                                <ListItem sx={{
+                                    backgroundColor : '#FFF',
+                                    ':hover' : {
+                                        opacity : '80%',
+                                        backgroundColor : '#EEF'
+                                    }
+                                }}  >
+                                    <ListItemText
+                                        primary={b.title}
+                                        secondary={b.author}
+                                    />
+                                </ListItem>
+                                <Divider variant="fullWidth" component="li"></Divider>
                             </Link>
-                        </div>
-                    )
-                })
-            }
 
+                        )
+                    })
+                }
 
-        </div>
+            </List>
+        </Container>
     )
 }
 

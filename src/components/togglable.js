@@ -1,6 +1,8 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 import propTypes from 'prop-types'
-
+import { Box, Button } from '@mui/material'
+import AddIcon from '@mui/icons-material/AddBoxTwoTone'
+import DisabledIcon from '@mui/icons-material/DisabledByDefaultTwoTone'
 const Togglable = forwardRef((props, refs) => {
     const [visible, setVisible] = useState(false)
     const hideWhenVisible = { display : visible ? 'none' : '' }
@@ -14,16 +16,24 @@ const Togglable = forwardRef((props, refs) => {
         }
     })
 
-    return(
-        <div>
-            <div style={hideWhenVisible}>
-                <button onClick={toggleVisibility}>{props.buttonLabel}</button>
-            </div>
-            <div style={showWhenVisible}>
+    return (
+        <Box sx={{
+            display : 'flex',
+            flexDirection  : 'row',
+            justifyContent : 'center'
+        }}>
+            <Box style={hideWhenVisible}>
+                <Button onClick={toggleVisibility} variant='outlined' fullWidth startIcon={<AddIcon/>}>
+                    {props.buttonLabel}
+                </Button>
+            </Box>
+            <Box style={showWhenVisible}>
                 {props.children}
-                <button onClick={toggleVisibility}>cancle</button>
-            </div>
-        </div>
+                <Button onClick={toggleVisibility} variant='outlined' color='error'  startIcon={<DisabledIcon/>}>
+                    cancle
+                </Button>
+            </Box>
+        </Box>
     )
 })
 Togglable.propTypes = {

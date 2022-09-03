@@ -1,14 +1,22 @@
+import { Button } from '@mui/material'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 const Menu = ({ user, logout }) => {
     const style = {
         marginRight : '5px',
-        border : '1px solid black',
-        borderRadius : '20%'
+        textDecoration : 'none',
+        color : '#333',
+        padding : 3,
+        borderRadius : 50,
+        ':hover' : {
+            backgroundColor : '#DDD'
+        },
+        backgroundColor : '#fff'
     }
     const navStyle = {
-        background: 'lightgrey',
+        backgroundColor: '#DED',
         fontSize: '20px',
         borderStyle: '0.5px solid',
         borderRadius: '5px',
@@ -26,7 +34,9 @@ const Menu = ({ user, logout }) => {
             </div>
             <div>
                 {user.name} {'logged in '}
-                <button onClick={logout}> logout </button>
+                <Button variant='outlined' onClick={logout} endIcon={<LogoutIcon/>} sx={{
+                    ml : 2
+                }}> logout </Button>
             </div>
         </div>
     )
